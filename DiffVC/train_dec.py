@@ -42,9 +42,9 @@ beta_max = params.beta_max
 random_seed = params.seed
 test_size = params.test_size
 
-data_dir = '../data/LibriTTS'
-val_file = 'filelists/valid.txt'
-exc_file = 'filelists/exceptions_libritts.txt'
+data_dir = './data/'
+val_file = 'filelists/validvc.txt'
+exc_file = 'filelists/exceptions_vctk.txt'
 
 log_dir = 'logs_dec'
 enc_dir = 'logs_enc'
