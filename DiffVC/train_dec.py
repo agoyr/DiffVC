@@ -93,19 +93,20 @@ if __name__ == "__main__":
         model.train()
         losses = []
         model.zero_grad()
+        batch_itr = 0
         for batch in tqdm(train_loader, total=len(train_set)//batch_size):
             mel, mel_ref = batch['mel1'].cuda(), batch['mel2'].cuda()
             c, mel_lengths = batch['c'].cuda(), batch['mel_lengths'].cuda()
             loss = model.compute_loss(mel, mel_lengths, mel_ref, c)
             losses.append(loss.item())
             iteration += 1
-
+            batch_itr +=1
             loss = loss/accum_iter ## 一回分のlossを減らす
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
             
             
-            if(iteration % accum_iter == 0):
+            if(batch_itr % accum_iter == 0):
                 optimizer.step()
                 model.zero_grad()
 
