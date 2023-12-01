@@ -157,7 +157,7 @@ class Diffusion(BaseModule):
     def forward_diffusion(self, x0, mask, mean, t):
         xt_mean = self.compute_diffused_mean(x0, mask, mean, t, use_torch=True)
         variance = 1.0 - self.get_gamma(0, t, p=2.0, use_torch=True)
-        z = torch.randn(x0.shape, dtype=x0.dtype, device=x0.device, requires_grad=False)
+        z = torch.rand(x0.shape, dtype=x0.dtype, device=x0.device, requires_grad=False)*2-1
         xt = xt_mean + z * torch.sqrt(variance)
         return xt * mask, z * mask
 
@@ -191,7 +191,7 @@ class Diffusion(BaseModule):
                     sigma = math.sqrt(beta_t * h)
                 dxt = (mean - xt) * (0.5 * beta_t * h + omega)
                 dxt -= self.estimator(xt, mask, mean, xt_ref, ref_mask, c, time) * (1.0 + kappa) * (beta_t * h)
-                dxt += torch.randn_like(z, device=z.device) * sigma
+                dxt += (torch.rand_like(z, device=z.device)*2-1) * sigma
             xt = (xt - dxt) * mask
         return xt
 
