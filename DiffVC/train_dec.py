@@ -49,7 +49,8 @@ exc_file = 'filelists/exceptions_vctk.txt'
 log_dir = 'logs_dec'
 enc_dir = 'logs_enc'
 epochs = 110
-batch_size = 32
+accum_iter = 4
+batch_size = 4
 learning_rate = 1e-4
 save_every = 1
 
@@ -91,16 +92,22 @@ if __name__ == "__main__":
         print(f'Epoch: {epoch} [iteration: {iteration}]')
         model.train()
         losses = []
+        model.zero_grad()
         for batch in tqdm(train_loader, total=len(train_set)//batch_size):
             mel, mel_ref = batch['mel1'].cuda(), batch['mel2'].cuda()
             c, mel_lengths = batch['c'].cuda(), batch['mel_lengths'].cuda()
-            model.zero_grad()
             loss = model.compute_loss(mel, mel_lengths, mel_ref, c)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
-            optimizer.step()
             losses.append(loss.item())
             iteration += 1
+
+            loss = loss/accum_iter ## 一回分のlossを減らす
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
+            
+            
+            if(iteration % accum_iter == 0):
+                optimizer.step()
+                model.zero_grad()
 
         losses = np.asarray(losses)
         msg = 'Epoch %d: loss = %.4f\n' % (epoch, np.mean(losses))
