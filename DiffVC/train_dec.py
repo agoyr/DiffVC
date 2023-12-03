@@ -14,7 +14,7 @@ import torch
 from torch.utils.data import DataLoader
 
 import params
-from data import VCDecDataset, VCDecBatchCollate
+from data import VCTKDecDataset, VCDecBatchCollate
 from model.vc import DiffVC
 from model.utils import FastGL
 from utils import save_plot, save_audio
@@ -46,7 +46,7 @@ data_dir = './data/'
 val_file = 'filelists/validvc.txt'
 exc_file = 'filelists/exceptions_vctk.txt'
 
-log_dir = 'logs_dec'
+log_dir = 'logs_dec_VCTK1'
 enc_dir = 'logs_enc'
 epochs = 110
 accum_iter = 4
@@ -63,7 +63,8 @@ if __name__ == "__main__":
     os.makedirs(log_dir, exist_ok=True)
 
     print('Initializing data loaders...')
-    train_set = VCDecDataset(data_dir, val_file, exc_file)
+    #train_set = VCDecDataset(data_dir, val_file, exc_file) LibriTTS data
+    train_set = VCTKDecDataset(data_dir) #VCTK data
     collate_fn = VCDecBatchCollate()
     train_loader = DataLoader(train_set, batch_size=batch_size, 
                               collate_fn=collate_fn, num_workers=4, drop_last=True)
