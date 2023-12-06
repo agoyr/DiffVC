@@ -1,2 +1,8 @@
 DiffVC/data
 *__pycache__
+DiffVC/logs_dec_VCTK1
+DiffVC/logs_dec_VCTK2
+DiffVC/testpng
+DiffVC/testpng_vc1
+DiffVC/inference.ipynb
+DiffVC/checkpts/vocoder/generator
