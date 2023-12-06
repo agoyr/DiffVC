@@ -14,7 +14,7 @@ import torch
 from torch.utils.data import DataLoader
 
 import params
-from data import VCDecDataset, VCDecBatchCollate
+from data import VCTKDecDataset, VCDecBatchCollate
 from model.vc import DiffVC
 from model.utils import FastGL
 from utils import save_plot, save_audio
@@ -42,14 +42,15 @@ beta_max = params.beta_max
 random_seed = params.seed
 test_size = params.test_size
 
-data_dir = '../data/LibriTTS'
-val_file = 'filelists/valid.txt'
-exc_file = 'filelists/exceptions_libritts.txt'
+data_dir = './data/'
+val_file = 'filelists/validvc.txt'
+exc_file = 'filelists/exceptions_vctk.txt'
 
-log_dir = 'logs_dec'
+log_dir = 'logs_dec_VCTK_gausian'
 enc_dir = 'logs_enc'
 epochs = 110
-batch_size = 32
+accum_iter = 4
+batch_size = 4
 learning_rate = 1e-4
 save_every = 1
 
@@ -62,7 +63,8 @@ if __name__ == "__main__":
     os.makedirs(log_dir, exist_ok=True)
 
     print('Initializing data loaders...')
-    train_set = VCDecDataset(data_dir, val_file, exc_file)
+    #train_set = VCDecDataset(data_dir, val_file, exc_file) LibriTTS data
+    train_set = VCTKDecDataset(data_dir) #VCTK data
     collate_fn = VCDecBatchCollate()
     train_loader = DataLoader(train_set, batch_size=batch_size, 
                               collate_fn=collate_fn, num_workers=4, drop_last=True)
@@ -91,16 +93,23 @@ if __name__ == "__main__":
         print(f'Epoch: {epoch} [iteration: {iteration}]')
         model.train()
         losses = []
+        model.zero_grad()
+        batch_itr = 0
         for batch in tqdm(train_loader, total=len(train_set)//batch_size):
             mel, mel_ref = batch['mel1'].cuda(), batch['mel2'].cuda()
             c, mel_lengths = batch['c'].cuda(), batch['mel_lengths'].cuda()
-            model.zero_grad()
             loss = model.compute_loss(mel, mel_lengths, mel_ref, c)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
-            optimizer.step()
             losses.append(loss.item())
             iteration += 1
+            batch_itr +=1
+            loss = loss/accum_iter ## 一回分のlossを減らす
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
+            
+            
+            if(batch_itr % accum_iter == 0):
+                optimizer.step()
+                model.zero_grad()
 
         losses = np.asarray(losses)
         msg = 'Epoch %d: loss = %.4f\n' % (epoch, np.mean(losses))
