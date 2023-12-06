@@ -1,0 +1,7 @@
+*__pycache__
+DiffVC/data
+DiffVC/logs_dec_VCTK1
+DiffVC/logs_dec_VCTK2
+DiffVC/testpng
+DiffVC/testpng_vc1
+DiffVC/checkpts/vocoder
