@@ -7,3 +7,5 @@ DiffVC/testpng
 DiffVC/testpng_vc1
 DiffVC/checkpts/vocoder/generator
 DiffVC/logs_enc
+DiffVC/logs_dec_VCTK_mod_gaussian
+DiffVC/logs_dec_VCTK_gausian
