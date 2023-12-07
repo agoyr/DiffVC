@@ -212,7 +212,7 @@ class Diffusion(BaseModule):
         xt_ref = torch.stack(xt_ref, 1)
         z_estimation = self.estimator(xt, mask, mean, xt_ref, mask, c, t)
         z_estimation *= torch.sqrt(1.0 - self.get_gamma(0, t, p=2.0, use_torch=True))
-        loss = torch.sum((z_estimation + z)**2) / (torch.sum(mask)*self.n_feats)
+        loss = torch.sum((z_estimation + xt)**2) / (torch.sum(mask)*self.n_feats)
         return loss
 
     def compute_loss(self, x0, mask, mean, x_ref, mean_ref, c, offset=1e-5):
