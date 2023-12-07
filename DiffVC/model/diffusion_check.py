@@ -194,7 +194,7 @@ class Diffusion(BaseModule):
                 dxt -= self.estimator(xt, mask, mean, xt_ref, ref_mask, c, time) * (1.0 + kappa) * (beta_t * h)
                 dxt += (torch.rand_like(z, device=z.device)*2-1) * sigma
             xt = (xt - dxt) * mask
-            save_plot(xt.squeeze().cpu(), f'./testpng_vc1/reconstructed_{i}.png')
+            save_plot(xt.squeeze().cpu(), f'./testpng_vc1_3/reconstructed_{i}.png')
         return xt
 
     @torch.no_grad()
