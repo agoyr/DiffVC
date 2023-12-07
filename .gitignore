@@ -9,3 +9,6 @@ DiffVC/checkpts/vocoder/generator
 DiffVC/logs_enc
 DiffVC/logs_dec_VCTK_mod_gaussian
 DiffVC/logs_dec_VCTK_gausian
+DiffVC/testpng_vc1_2
+DiffVC/testpng_vc1_3
+DiffVC/testpng_vc2
