@@ -5,3 +5,5 @@ DiffVC/logs_dec_VCTK2
 DiffVC/testpng
 DiffVC/testpng_vc1
 DiffVC/checkpts/vocoder
+DiffVC/logs_dec_VCTK_gausian
+DiffVC/logs_enc
