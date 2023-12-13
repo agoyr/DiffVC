@@ -46,7 +46,7 @@ data_dir = './data/'
 val_file = 'filelists/validvc.txt'
 exc_file = 'filelists/exceptions_vctk.txt'
 
-log_dir = 'logs_dec_VCTK_gausian'
+log_dir = 'logs_dec_pink_noise1'
 enc_dir = 'logs_enc'
 epochs = 110
 accum_iter = 4
@@ -105,8 +105,6 @@ if __name__ == "__main__":
             loss = loss/accum_iter ## 一回分のlossを減らす
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
-            
-            
             if(batch_itr % accum_iter == 0):
                 optimizer.step()
                 model.zero_grad()
