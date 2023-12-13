@@ -1,7 +1,7 @@
 import numpy as np 
 import torch
 
-def generate_pink_noise(x,end_scale):
+def generate_pink_noise(x,end_scale=0.1):
     xshape = x.shape
     lin = np.linspace(1,end_scale,xshape[1])
     tiled_lin = np.tile(lin,(xshape[2],1)).T
