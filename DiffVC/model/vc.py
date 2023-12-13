@@ -13,6 +13,7 @@ from model.encoder import MelEncoder
 from model.postnet import PostNet
 from model.diffusion import Diffusion
 from model.utils import sequence_mask, fix_len_compatibility, mse_loss
+from noise import generate_pink_noise
 
 
 # "average voice" encoder as the module parameterizing the diffusion prior
@@ -120,7 +121,8 @@ class DiffVC(BaseModule):
             mean_x_new[i, :, :x_lengths[i]] = mean_x[i, :, :x_lengths[i]]
 
         z = mean_x_new
-        z += torch.randn_like(mean_x_new, device=mean_x_new.device)
+        # z += torch.randn_like(mean_x_new, device=mean_x_new.device)
+        z += generate_pink_noise(z)
 
         y = self.decoder(z, x_mask_new, mean_new, x_ref, x_ref_mask, mean_ref, c, 
                          n_timesteps, mode)
