@@ -8,7 +8,7 @@
 
 import math
 import torch
-from noise import generate_pink_noise
+from noise import generate_pink_noise, generate_blue_noise
 
 from model.base import BaseModule
 from model.modules import Mish, Upsample, Downsample, Rezero, Block, ResnetBlock
@@ -159,7 +159,7 @@ class Diffusion(BaseModule):
         xt_mean = self.compute_diffused_mean(x0, mask, mean, t, use_torch=True)
         variance = 1.0 - self.get_gamma(0, t, p=2.0, use_torch=True)
         # z = torch.randn(x0.shape, dtype=x0.dtype, device=x0.device, requires_grad=False)
-        z = generate_pink_noise(x0)
+        z = generate_blue_noise(x0)
         xt = xt_mean + z * torch.sqrt(variance)
         return xt * mask, z * mask
 
@@ -194,7 +194,7 @@ class Diffusion(BaseModule):
                 dxt = (mean - xt) * (0.5 * beta_t * h + omega)
                 dxt -= self.estimator(xt, mask, mean, xt_ref, ref_mask, c, time) * (1.0 + kappa) * (beta_t * h)
                 # dxt += torch.randn_like(z, device=z.device) * sigma
-                dxt += generate_pink_noise(z) * sigma
+                dxt += generate_blue_noise(z) * sigma
             xt = (xt - dxt) * mask
         return xt
 
