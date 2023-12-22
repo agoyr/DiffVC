@@ -46,9 +46,9 @@ data_dir = './data/'
 val_file = 'filelists/validvc.txt'
 exc_file = 'filelists/exceptions_vctk.txt'
 
-log_dir = 'logs_dec_blue_noise1'
+log_dir = 'logs_dec_half_noise1'
 enc_dir = 'logs_enc'
-epochs = 110
+epochs = 50
 accum_iter = 4
 batch_size = 4
 learning_rate = 1e-4
