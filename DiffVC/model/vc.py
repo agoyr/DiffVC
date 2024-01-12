@@ -121,7 +121,7 @@ class DiffVC(BaseModule):
             mean_x_new[i, :, :x_lengths[i]] = mean_x[i, :, :x_lengths[i]]
 
         z = mean_x_new
-        z += torch.randn_like(mean_x_new, device=mean_x_new.device)*0.01
+        z += torch.randn_like(mean_x_new, device=mean_x_new.device)*0.1
         # z += generate_blue_noise(z)
 
         y = self.decoder(z, x_mask_new, mean_new, x_ref, x_ref_mask, mean_ref, c, 
