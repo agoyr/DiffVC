@@ -7,6 +7,7 @@
 # MIT License for more details.
 
 import torch
+import sys
 
 from model.base import BaseModule
 from model.encoder import MelEncoder
@@ -126,6 +127,7 @@ class DiffVC(BaseModule):
 
         y = self.decoder(z, x_mask_new, mean_new, x_ref, x_ref_mask, mean_ref, c, 
                          n_timesteps, mode)
+        
         return mean_x, y[:, :, :max_length]
 
     def compute_loss(self, x, x_lengths, x_ref, c):

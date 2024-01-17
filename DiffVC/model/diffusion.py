@@ -8,11 +8,13 @@
 
 import math
 import torch
+import sys
 from noise import generate_pink_noise, generate_blue_noise
 
 from model.base import BaseModule
 from model.modules import Mish, Upsample, Downsample, Rezero, Block, ResnetBlock
 from model.modules import LinearAttention, Residual, SinusoidalPosEmb, RefBlock
+import matplotlib.pyplot as plt
 
 
 class GradLogPEstimator(BaseModule):
@@ -168,6 +170,7 @@ class Diffusion(BaseModule):
                           n_timesteps, mode):
         h = 1.0 / n_timesteps
         xt = z * mask
+        plt.imsave("./testpng_white/x0.png",xt[0].cpu())
         for i in range(n_timesteps):
             t = 1.0 - i*h
             time = t * torch.ones(z.shape[0], dtype=z.dtype, device=z.device)
@@ -196,6 +199,7 @@ class Diffusion(BaseModule):
                 dxt += torch.randn_like(z, device=z.device)* sigma
                 # dxt += generate_blue_noise(z) * sigma
             xt = (xt - dxt) * mask
+            plt.imsave("./testpng_white/x{}.png".format(i+1),xt[0].cpu())
         return xt
 
     @torch.no_grad()
