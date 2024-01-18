@@ -46,7 +46,7 @@ data_dir = './data/'
 val_file = 'filelists/validvc.txt'
 exc_file = 'filelists/exceptions_vctk.txt'
 
-log_dir = 'logs_dec_pink_noise1'
+log_dir = 'logs_dec_pink_noise_batch'
 enc_dir = 'logs_enc'
 epochs = 110
 accum_iter = 4
@@ -106,15 +106,20 @@ if __name__ == "__main__":
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.decoder.parameters(), max_norm=1)
             if(batch_itr % accum_iter == 0):
+                losses = np.asarray(losses)
+                msg = 'Epoch %d, batch %d: loss = %f\n' % (epoch, batch_itr,  np.mean(losses)) 
+                with open(f'{log_dir}/train_dec.log', 'a') as f:
+                    f.write(msg)
+                losses = []    
                 optimizer.step()
                 model.zero_grad()
 
-        losses = np.asarray(losses)
-        msg = 'Epoch %d: loss = %.4f\n' % (epoch, np.mean(losses))
-        print(msg)
-        with open(f'{log_dir}/train_dec.log', 'a') as f:
-            f.write(msg)
-        losses = []
+        # losses = np.asarray(losses)
+        # msg = 'Epoch %d: loss = %.4f\n' % (epoch, np.mean(losses))
+        # print(msg)
+        # with open(f'{log_dir}/train_dec.log', 'a') as f:
+        #     f.write(msg)
+        # losses = []
 
         if epoch % save_every > 0:
             continue
