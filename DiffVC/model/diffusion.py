@@ -170,7 +170,7 @@ class Diffusion(BaseModule):
                           n_timesteps, mode):
         h = 1.0 / n_timesteps
         xt = z * mask
-        plt.imsave("./testpng_white/x0.png",xt[0].cpu())
+        # plt.imsave("./testpng_white/x0.png",xt[0].cpu())
         for i in range(n_timesteps):
             t = 1.0 - i*h
             time = t * torch.ones(z.shape[0], dtype=z.dtype, device=z.device)
@@ -199,7 +199,7 @@ class Diffusion(BaseModule):
                 dxt += torch.randn_like(z, device=z.device)* sigma
                 # dxt += generate_blue_noise(z) * sigma
             xt = (xt - dxt) * mask
-            plt.imsave("./testpng_white/x{}.png".format(i+1),xt[0].cpu())
+            # plt.imsave("./testpng_white/x{}.png".format(i+1),xt[0].cpu())
         return xt
 
     @torch.no_grad()
